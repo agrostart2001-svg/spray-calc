@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Обприскування — Норми</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  background: #f2f2f7;
+  color: #1c1c1e;
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
+}
+.app { padding: 16px; max-width: 560px; margin: 0 auto; }
+h1 { font-size: 28px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px; }
+.subtitle { font-size: 17px; color: #8e8e93; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
+.card-title { font-size: 13px; font-weight: 700; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+.card-title-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; margin-bottom: 12px; }
+.row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: 10px; margin-bottom: 12px; }
+.row:last-child { margin-bottom: 0; }
+.row-label { font-size: 17px; color: #8e8e93; min-width: 120px; }
+.row select, .row input[type=number] {
+  -webkit-flex: 1; flex: 1;
+  font-size: 18px;
+  padding: 11px 12px;
+  border: 1.5px solid #e5e5ea;
+  border-radius: 10px;
+  background: #f9f9f9;
+  color: #1c1c1e;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+.unit { font-size: 16px; color: #8e8e93; min-width: 32px; }
+
+/* Prep rows */
+.prep-row {
+  display: -webkit-flex; display: flex;
+  -webkit-align-items: center; align-items: center;
+  gap: 12px; padding: 13px 0;
+  border-bottom: 0.5px solid #e5e5ea;
+  cursor: pointer;
+  min-height: 54px;
+}
+.prep-row:last-child { border-bottom: none; }
+.dot { width: 12px; height: 12px; border-radius: 50%; -webkit-flex-shrink: 0; flex-shrink: 0; }
+.prep-name { -webkit-flex: 1; flex: 1; font-size: 18px; color: #1c1c1e; }
+.prep-norm-label { font-size: 15px; color: #8e8e93; white-space: nowrap; }
+.prep-cb { width: 26px; height: 26px; -webkit-flex-shrink: 0; flex-shrink: 0; cursor: pointer; margin: 0; }
+
+/* Edit rows */
+.edit-row {
+  display: -webkit-flex; display: flex;
+  -webkit-align-items: center; align-items: center;
+  gap: 6px; padding: 8px 0;
+  border-bottom: 0.5px solid #e5e5ea;
+}
+.edit-row:last-child { border-bottom: none; }
+.edit-name {
+  -webkit-flex: 2; flex: 2;
+  font-size: 17px; padding: 10px 10px;
+  border: 1.5px solid #e5e5ea; border-radius: 9px;
+  background: #f9f9f9; color: #1c1c1e; min-width: 0;
+  -webkit-appearance: none;
+}
+.edit-norm {
+  width: 76px; font-size: 17px; padding: 10px 8px;
+  border: 1.5px solid #e5e5ea; border-radius: 9px;
+  background: #f9f9f9; color: #1c1c1e;
+  -webkit-appearance: none;
+}
+.edit-unit {
+  width: 72px; font-size: 14px; padding: 10px 6px;
+  border: 1.5px solid #e5e5ea; border-radius: 9px;
+  background: #f9f9f9; color: #1c1c1e;
+  -webkit-appearance: none; appearance: none;
+}
+.del-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #ff3b30; border: none; color: #fff;
+  font-size: 22px; line-height: 36px; text-align: center;
+  cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; padding: 0;
+}
+.add-btn {
+  width: 100%; margin-top: 12px; padding: 13px;
+  border: 2px dashed #c7c7cc; border-radius: 10px;
+  background: transparent; color: #8e8e93;
+  font-size: 17px; cursor: pointer; display: block;
+}
+.edit-toggle {
+  font-size: 16px; font-weight: 600; padding: 8px 18px;
+  border-radius: 10px; border: 1.5px solid #e5e5ea;
+  background: #f2f2f7; color: #3a7bd5; cursor: pointer;
+}
+.edit-toggle.done { background: #3a7bd5; color: #fff; border-color: #3a7bd5; }
+
+/* Results */
+.result-item {
+  display: -webkit-flex; display: flex;
+  -webkit-align-items: center; align-items: center;
+  padding: 12px 0; border-bottom: 0.5px solid #e5e5ea; gap: 12px;
+}
+.result-item:last-child { border-bottom: none; }
+.res-name { -webkit-flex: 1; flex: 1; }
+.res-name-main { font-size: 17px; color: #1c1c1e; }
+.res-name-sub { font-size: 14px; color: #8e8e93; margin-top: 3px; }
+.amount { font-size: 26px; font-weight: 600; color: #1c1c1e; min-width: 70px; text-align: right; }
+.amount-unit { font-size: 15px; color: #8e8e93; min-width: 26px; }
+.empty { text-align: center; padding: 24px; color: #8e8e93; font-size: 17px; }
+.info-box {
+  background: #f0f7ff; border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 12px;
+  font-size: 16px; color: #3a7bd5;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Обприскування</h1>
+  <p class="subtitle">Розрахунок препаратів на бак</p>
+
+  <div class="card">
+    <div class="card-title">Параметри</div>
+    <div class="row">
+      <span class="row-label">Агрегат</span>
+      <select id="aggregat"></select>
+    </div>
+    <div class="row">
+      <span class="row-label">Обʼєм баку</span>
+      <select id="bak"></select>
+      <span class="unit">л</span>
+    </div>
+    <div class="row">
+      <span class="row-label">Норма виливу</span>
+      <input type="number" id="vyliv" value="180" min="10" max="500" step="10" />
+      <span class="unit">л/га</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title-row">
+      <span class="card-title" style="margin-bottom:0">Препарати</span>
+      <button class="edit-toggle" id="edit-btn">Редагувати</button>
+    </div>
+    <div id="prep-selector"></div>
+    <div id="add-row" style="display:none">
+      <button class="add-btn" id="add-prep-btn">+ Додати препарат</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Результат — кількість на бак</div>
+    <div id="result-area"><p class="empty">Виберіть препарати вище</p></div>
+  </div>
+</div>
+
+<script>
+(function() {
+
+var preps = [
+  { name: "Пеностоп Foamex",       norm: 0.00385, unit: "л/га",  color: "#4A90D9" },
+  { name: "Ph - Water Power",       norm: 0.08,    unit: "л/га",  color: "#7B68EE" },
+  { name: "Сульфат Магнію Макош",   norm: 3,       unit: "кг/га", color: "#20B2AA" },
+  { name: "Інсектицид Цимід",       norm: 0.25,    unit: "л/га",  color: "#E07040" },
+  { name: "Фунгіцид Тілмор Bayer",  norm: 0.8,     unit: "л/га",  color: "#5D8A5E" },
+  { name: "Бор Макош",              norm: 1.5,     unit: "л/га",  color: "#C4A44E" },
+  { name: "Прилипатель СКОТЧ",      norm: 0.1,     unit: "л/га",  color: "#B06080" }
+];
+
+var palette = ["#4A90D9","#7B68EE","#20B2AA","#E07040","#5D8A5E","#C4A44E","#B06080","#E05D8A","#50C878","#FF8C00"];
+var selected = {};
+var editMode = false;
+
+var elAggregat = document.getElementById("aggregat");
+var elBak      = document.getElementById("bak");
+var elVyliv    = document.getElementById("vyliv");
+var elPreps    = document.getElementById("prep-selector");
+var elResult   = document.getElementById("result-area");
+var elEditBtn  = document.getElementById("edit-btn");
+var elAddRow   = document.getElementById("add-row");
+var elAddBtn   = document.getElementById("add-prep-btn");
+
+/* ---- Aggregat ---- */
+function buildAggregat() {
+  var opts = [["bertu","Берту"], ["opv","ОПВ-2000"]];
+  for (var i = 0; i < opts.length; i++) {
+    var o = document.createElement("option");
+    o.value = opts[i][0]; o.text = opts[i][1];
+    elAggregat.appendChild(o);
+  }
+}
+
+/* ---- Baks ---- */
+function buildBaks() {
+  while (elBak.options.length) elBak.remove(0);
+  for (var v = 5000; v >= 1000; v -= 100) {
+    var o = document.createElement("option");
+    o.value = v; o.text = v;
+    elBak.appendChild(o);
+  }
+  elBak.value = 5000;
+}
+
+/* ---- Events ---- */
+elAggregat.addEventListener("change", calc);
+elBak.addEventListener("change", calc);
+elVyliv.addEventListener("input", calc);
+elVyliv.addEventListener("change", calc);
+
+elEditBtn.addEventListener("click", function() {
+  if (editMode) {
+    flushEdits();
+    editMode = false;
+    elEditBtn.textContent = "Редагувати";
+    elEditBtn.className = "edit-toggle";
+    elAddRow.style.display = "none";
+    selected = {};
+    renderPreps();
+    calc();
+  } else {
+    editMode = true;
+    elEditBtn.textContent = "Готово";
+    elEditBtn.className = "edit-toggle done";
+    elAddRow.style.display = "block";
+    renderPreps();
+  }
+});
+
+elAddBtn.addEventListener("click", function() {
+  flushEdits();
+  preps.push({ name: "", norm: 1, unit: "л/га", color: palette[preps.length % palette.length] });
+  renderPreps();
+  var inputs = elPreps.querySelectorAll("input[data-f='name']");
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+/* ---- Flush edits ---- */
+function flushEdits() {
+  var rows = elPreps.querySelectorAll(".edit-row");
+  var updated = [];
+  for (var i = 0; i < rows.length; i++) {
+    var nameEl = rows[i].querySelector("input[data-f='name']");
+    var normEl = rows[i].querySelector("input[data-f='norm']");
+    var unitEl = rows[i].querySelector("select[data-f='unit']");
+    if (!nameEl) continue;
+    var nm = nameEl.value.trim();
+    var nr = parseFloat(normEl.value);
+    var ut = unitEl.value;
+    if (nm && !isNaN(nr) && nr > 0) {
+      updated.push({ name: nm, norm: nr, unit: ut, color: palette[updated.length % palette.length] });
+    }
+  }
+  if (updated.length > 0) preps = updated;
+}
+
+function deletePrep(idx) {
+  flushEdits();
+  preps.splice(idx, 1);
+  renderPreps();
+}
+
+/* ---- Render ---- */
+function renderPreps() {
+  while (elPreps.firstChild) elPreps.removeChild(elPreps.firstChild);
+
+  if (editMode) {
+    for (var i = 0; i < preps.length; i++) {
+      (function(idx) {
+        var p = preps[idx];
+        var row = document.createElement("div");
+        row.className = "edit-row";
+
+        var nameIn = document.createElement("input");
+        nameIn.type = "text";
+        nameIn.className = "edit-name";
+        nameIn.setAttribute("data-f", "name");
+        nameIn.value = p.name;
+        nameIn.placeholder = "Назва препарату";
+
+        var normIn = document.createElement("input");
+        normIn.type = "number";
+        normIn.className = "edit-norm";
+        normIn.setAttribute("data-f", "norm");
+        normIn.value = String(p.norm);
+        normIn.min = "0";
+        normIn.step = "any";
+
+        var unitSel = document.createElement("select");
+        unitSel.className = "edit-unit";
+        unitSel.setAttribute("data-f", "unit");
+        var units = ["л/га","кг/га","мл/га","г/га"];
+        for (var u = 0; u < units.length; u++) {
+          var o = document.createElement("option");
+          o.value = units[u]; o.text = units[u];
+          if (units[u] === p.unit) o.selected = true;
+          unitSel.appendChild(o);
+        }
+
+        var delBtn = document.createElement("button");
+        delBtn.className = "del-btn";
+        delBtn.type = "button";
+        delBtn.textContent = "\u00D7";
+        (function(i) {
+          delBtn.addEventListener("click", function() { deletePrep(i); });
+        })(idx);
+
+        row.appendChild(nameIn);
+        row.appendChild(normIn);
+        row.appendChild(unitSel);
+        row.appendChild(delBtn);
+        elPreps.appendChild(row);
+      })(i);
+    }
+
+  } else {
+    for (var j = 0; j < preps.length; j++) {
+      (function(idx) {
+        var p = preps[idx];
+        var row = document.createElement("div");
+        row.className = "prep-row";
+
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.className = "prep-cb";
+        cb.checked = !!selected[idx];
+        (function(i, box) {
+          box.addEventListener("change", function() { selected[i] = box.checked; calc(); });
+          row.addEventListener("click", function(e) {
+            if (e.target === box) return;
+            box.checked = !box.checked;
+            selected[i] = box.checked;
+            calc();
+          });
+        })(idx, cb);
+
+        var dot = document.createElement("div");
+        dot.className = "dot";
+        dot.style.background = p.color;
+
+        var nm = document.createElement("span");
+        nm.className = "prep-name";
+        nm.textContent = p.name;
+
+        var nr = document.createElement("span");
+        nr.className = "prep-norm-label";
+        nr.textContent = p.norm + "\u00a0" + p.unit;
+
+        row.appendChild(cb);
+        row.appendChild(dot);
+        row.appendChild(nm);
+        row.appendChild(nr);
+        elPreps.appendChild(row);
+      })(j);
+    }
+  }
+}
+
+/* ---- Calc ---- */
+function calc() {
+  var bak = parseInt(elBak.value, 10);
+  var vyliv = parseFloat(elVyliv.value) || 180;
+  var ha = bak / vyliv;
+
+  var hasSelected = false;
+  for (var k in selected) { if (selected[k]) { hasSelected = true; break; } }
+
+  if (!hasSelected) {
+    elResult.innerHTML = '<p class="empty">Виберіть препарати вище</p>';
+    return;
+  }
+
+  var html = '<div class="info-box">Бак <strong>' + bak + '\u00a0л</strong> — покриває <strong>' + ha.toFixed(2) + '\u00a0га</strong></div>';
+
+  for (var i = 0; i < preps.length; i++) {
+    if (!selected[i]) continue;
+    var p = preps[i];
+    var amount = p.norm * ha;
+    var disp = amount < 0.01 ? amount.toFixed(5) : amount < 0.1 ? amount.toFixed(4) : amount < 1 ? amount.toFixed(3) : amount.toFixed(2);
+    var unitShort = p.unit.replace("/га","");
+    html += '<div class="result-item">' +
+      '<div class="dot" style="background:' + p.color + '"></div>' +
+      '<div class="res-name">' +
+        '<div class="res-name-main">' + p.name + '</div>' +
+        '<div class="res-name-sub">' + p.norm + '\u00a0' + p.unit + ' \u00d7 ' + ha.toFixed(2) + '\u00a0га</div>' +
+      '</div>' +
+      '<div class="amount">' + disp + '</div>' +
+      '<div class="amount-unit">' + unitShort + '</div>' +
+    '</div>';
+  }
+  elResult.innerHTML = html;
+}
+
+/* ---- Init ---- */
+buildAggregat();
+buildBaks();
+renderPreps();
+calc();
+
+})();
+</script>
+</body>
+</html>
